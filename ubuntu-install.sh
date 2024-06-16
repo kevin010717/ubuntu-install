@@ -21,8 +21,9 @@ google-chrome
 
 bash -c "$(curl -kfsSl --resolve raw.githubusercontent.com:443:199.232.68.133 https://raw.githubusercontent.com/juewuy/ShellClash/master/install.sh)" && source /etc/profile &> /dev/null
 
-sudo systemctl status ssh
-
 curl -s https://install.zerotier.com | sudo bash
 sudo systemctl start zerotier-one
+sudo chmod a+w /usr/lib/systemd/system/zerotier-one.service
+sudo sed -i '/^After.*/s/$/ shellcrash.service/' /usr/lib/systemd/system/zerotier-one.service
+sudo systemctl daemon-reload
 sudo zerotier-cli join 8056c2e21c28950a
