@@ -1,6 +1,7 @@
 #!/bin/bash
 #markdown-preview.nvm
-#chatgpt
+#chatgpt aider
+#ebook-terminal bk 
 #迁移到服务器
 sudo passwd root
 sudo passwd -u root
@@ -55,3 +56,30 @@ docker-compose --version
 sudo sed -i 's/#HandleLidSwitch=suspend/HandleLidSwitch=ignore/' /etc/systemd/logind.conf
 sudo sed -i 's/#HandleLidSwitchExternalPower=suspend/HandleLidSwitchExternalPower=ignore/' /etc/systemd/logind.conf
 sudo systemctl restart systemd-logind.service
+
+sudo docker pull yidadaa/chatgpt-next-web
+sudo docker run -d -p 3000:3000 \
+   -e OPENAI_API_KEY=sk-pfQvDlLpDDVSlj1I618e034d18Fc4bBd866392F612F3Bb8f \
+   -e CODE=6666 \
+   -e BASE_URL=https://oneapi.xty.app \
+   yidadaa/chatgpt-next-web
+
+git clone https://github.com/paul-gauthier/aider.git .aider
+cd .aider
+python3 -m venv venv
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+./venv/bin/python3 -m pip install aider-chat
+export OPENAI_API_KEY=sk-pfQvDlLpDDVSlj1I618e034d18Fc4bBd866392F612F3Bb8f
+export OPENAI_API_BASE="https://api.xty.app/v1"
+source venv/bin/activate
+aider
+
+git clone https://github.com/wustho/epr.git .erp
+cd .epr
+python3 -m venv venv
+./venv/bin/python3 -m pip install epr-reader
+#./venv/bin/python3 epr.py  file.epub
+
+sudo apt install cargo
+cargo install bk
+#command not found
