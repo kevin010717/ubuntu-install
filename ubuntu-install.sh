@@ -9,6 +9,17 @@ chmod +x "$0"
 #
 #
 
+install-lua-language-server() {
+	sudo apt-get install lua5.3 liblua5.3-dev
+	sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+	(
+		echo
+		echo 'eval "$(/home/linuxbrew/.linuxbre  w/bin/brew shellenv)"'
+	) >>/home/kevin/.zshrc
+	eval "$(/home/linuxbrew/.linuxbrew/bin/brew she llenv)"
+	brew install lua-language-server
+}
+
 install-aider() {
 	git clone https://github.com/paul-gauthier/aider.git .aider
 	cd .aider
@@ -36,7 +47,6 @@ install-ebr() {
 }
 
 install-bk() {
-	sudo apt install cargo
 	cargo install bk
 }
 
@@ -47,17 +57,6 @@ install-zeretier-one() {
 	sudo sed -i '/^After.*/s/$/ shellcrash.service/' /usr/lib/systemd/system/zerotier-one.service
 	sudo systemctl daemon-reload
 	sudo zerotier-cli join 8056c2e21c28950a
-}
-
-install-lua-language-server() {
-	sudo apt-get install lua5.3 liblua5.3-dev
-	sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
-	(
-		echo
-		echo 'eval "$(/home/linuxbrew/.linuxbre  w/bin/brew shellenv)"'
-	) >>/home/kevin/.zshrc
-	eval "$(/home/linuxbrew/.linuxbrew/bin/brew she llenv)"
-	brew install lua-language-server
 }
 
 install-gitbook() {
@@ -73,12 +72,12 @@ install-docker() {
 	sudo apt-get install docker.io
 	sudo systemctl start docker
 	sudo systemctl enable docker
-	sudo docker run hello-world
 	sudo echo '{
 "registry-mirrors": [
 "https://2h3poj2z.mirror.aliyuncs.com"
 ]
 }' >/etc/docker/daemon.jason
+	sudo docker run hello-world
 	sudo curl -L "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 	sudo chmod +x /usr/local/bin/docker-compose
 	docker-compose --version
@@ -153,36 +152,33 @@ install-update() {
 	sudo passwd -u root
 	sudo -i
 	sudo apt update
-	sudo apt install curl neovim git gh zsh net-tools tmux openssh-server build-essential npm fzf ytfzf ranger rtv -y
+	sudo apt install curl neovim git gh zsh net-tools tmux openssh-server build-essential npm fzf ytfzf ranger rtv cargo -y
 }
-
-RED_COLOR='\e[1;31m'
-GREEN_COLOR='\e[1;32m'
-YELLOW_COLOR='\e[1;33m'
-BLUE_COLOR='\e[1;34m'
-PINK_COLOR='\e[1;35m'
-SHAN='\e[1;33;5m'
-RES='\e[0m'
-
-while true; do
-	echo -e "${GREEN_COLOR}1.install${RES}"
-	echo -e "${GREEN_COLOR}2.start${RES}"
-	echo -e "${GREEN_COLOR}3.get some fun${RES}"
-	read choice
-	case $choice in
-	1) install ;;
-	2) start ;;
-	3) fun ;;
-	*) break ;;
-	esac
-done
 
 install() {
 	while true; do
-		echo -e "${GREEN_COLOR}1.update${RES}"
+		echo -e "${GREEN_COLOR}1.install-update${RES}"
+		echo -e "${GREEN_COLOR}2.install-zsh-lazyvim${RES}"
+		echo -e "${GREEN_COLOR}3.install-alacritty${RES}"
+		echo -e "${GREEN_COLOR}4.install-ubuntu-setup${RES}"
+		echo -e "${GREEN_COLOR}5.install-shellcrash${RES}"
+		echo -e "${GREEN_COLOR}6.install-chatgpt-next-web${RES}"
+		echo -e "${GREEN_COLOR}7.install-calibre-web${RES}"
+		echo -e "${GREEN_COLOR}8.install-docker${RES}"
+		echo -e "${GREEN_COLOR}9.install-docker${RES}"
+		echo -e "${GREEN_COLOR}10.install-zeretier-one${RES}"
 		read choice
 		case $choice in
-		1) ;;
+		1) install-update ;;
+		2) install-zsh-lazyvim ;;
+		3) install-alacritty ;;
+		4) install-ubuntu-setup ;;
+		5) install-shellcrash ;;
+		6) install-chatgpt-next-web ;;
+		7) install-calibre-web ;;
+		8) install-docker ;;
+		9) install-gitbook ;;
+		10) install-zeretier-one ;;
 		*) break ;;
 		esac
 	done
@@ -209,3 +205,24 @@ fun() {
 		esac
 	done
 }
+
+RED_COLOR='\e[1;31m'
+GREEN_COLOR='\e[1;32m'
+YELLOW_COLOR='\e[1;33m'
+BLUE_COLOR='\e[1;34m'
+PINK_COLOR='\e[1;35m'
+SHAN='\e[1;33;5m'
+RES='\e[0m'
+
+while true; do
+	echo -e "${GREEN_COLOR}1.install${RES}"
+	echo -e "${GREEN_COLOR}2.start${RES}"
+	echo -e "${GREEN_COLOR}3.get some fun${RES}"
+	read choice
+	case $choice in
+	1) install ;;
+	2) start ;;
+	3) fun ;;
+	*) break ;;
+	esac
+done
