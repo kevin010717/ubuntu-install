@@ -112,10 +112,6 @@ install-chatgpt-next-web() {
 		yidadaa/chatgpt-next-web
 }
 
-install-shellcrash() {
-	bash -c "$(curl -kfsSl --resolve raw.githubusercontent.com:443:199.232.68.133 https://raw.githubusercontent.com/juewuy/ShellClash/master/install.sh)" && source /etc/profile &>/dev/null
-}
-
 install-ubuntu-setup() {
 	#合盖不休眠
 	sudo sed -i 's/#HandleLidSwitch=suspend/HandleLidSwitch=ignore/' /etc/systemd/logind.conf
@@ -147,6 +143,12 @@ install-zsh-lazyvim() {
 	git clone https://github.com/LazyVim/starter ~/.config/nvim && nvim
 }
 
+install-shellcrash() {
+	bash -c "$(curl -kfsSl --resolve raw.githubusercontent.com:443:199.232.68.133 https://raw.githubusercontent.com/juewuy/ShellClash/master/install.sh)" && source /etc/profile &>/dev/null
+	#https://sub.chasing.sbs:21600/api/v1/client/subscribe?token=52510b4697e5d0a7c108af210cd2834a
+	#https://abc.xhonor.top:9066/v2b/qz/api/v1/client/subscribe?token=a1cbd3ce604abc59ef349b53bb596654
+}
+
 install-update() {
 	sudo passwd root
 	sudo passwd -u root
@@ -158,14 +160,14 @@ install-update() {
 install() {
 	while true; do
 		echo -e "${GREEN_COLOR}1.install-update${RES}"
-		echo -e "${GREEN_COLOR}2.install-zsh-lazyvim${RES}"
-		echo -e "${GREEN_COLOR}3.install-alacritty${RES}"
-		echo -e "${GREEN_COLOR}4.install-ubuntu-setup${RES}"
-		echo -e "${GREEN_COLOR}5.install-shellcrash${RES}"
+		echo -e "${GREEN_COLOR}2.install-shellcrash${RES}"
+		echo -e "${GREEN_COLOR}3.install-zsh-lazyvim${RES}"
+		echo -e "${GREEN_COLOR}5.install-ubuntu-setup${RES}"
+		echo -e "${GREEN_COLOR}4.install-alacritty${RES}"
 		echo -e "${GREEN_COLOR}6.install-chatgpt-next-web${RES}"
 		echo -e "${GREEN_COLOR}7.install-calibre-web${RES}"
 		echo -e "${GREEN_COLOR}8.install-docker${RES}"
-		echo -e "${GREEN_COLOR}9.install-docker${RES}"
+		echo -e "${GREEN_COLOR}9.install-gitbook${RES}"
 		echo -e "${GREEN_COLOR}10.install-zeretier-one${RES}"
 		read choice
 		case $choice in
