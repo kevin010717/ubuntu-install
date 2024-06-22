@@ -65,12 +65,7 @@ install-zeretier-one() {
 }
 
 install-gitbook() {
-	curl -fsSL https://bun.sh/install | bash
-	source .zshrc
-	git clone https://github.com/gitbookIO/gitbook.git .gitbook
-	cd .gitbook
-	bun install
-	bun dev
+	sudo npm install -g bun gitbook-cli
 }
 
 install-docker() {
@@ -121,7 +116,7 @@ install-ubuntu-setup() {
 	#合盖不休眠
 	sudo sed -i 's/#HandleLidSwitch=suspend/HandleLidSwitch=ignore/' /etc/systemd/logind.conf
 	sudo sed -i 's/#HandleLidSwitchExternalPower=suspend/HandleLidSwitchExternalPower=ignore/' /etc/systemd/logind.conf
-	sudo systemctl restart systemd-logind.service
+	#sudo systemctl restart systemd-logind.service
 	#sudo 无密码
 	echo '%kevin     ALL=(ALL) NOPASSWD: ALL' | sudo tee -a /etc/sudoers
 	#google-chrome
@@ -157,7 +152,7 @@ install-shellcrash() {
 
 install-update() {
 	sudo mv /etc/apt/sources.list.d/ubuntu.sources /etc/apt/sources.list.d/ubuntu.sources.bak
-	echo "
+	sudo echo "
 Enabled: yes
 Types: deb
 URIs: http://mirrors.tuna.tsinghua.edu.cn/ubuntu/
@@ -187,9 +182,9 @@ install() {
 		echo -e "${GREEN_COLOR}3.install-zsh-lazyvim${RES}"
 		echo -e "${GREEN_COLOR}4.install-alacritty${RES}"
 		echo -e "${GREEN_COLOR}5.install-ubuntu-setup${RES}"
-		echo -e "${GREEN_COLOR}6.install-chatgpt-next-web${RES}"
-		echo -e "${GREEN_COLOR}7.install-calibre-web${RES}"
-		echo -e "${GREEN_COLOR}8.install-docker${RES}"
+		echo -e "${GREEN_COLOR}6.install-docker${RES}"
+		echo -e "${GREEN_COLOR}7.install-chatgpt-next-web${RES}"
+		echo -e "${GREEN_COLOR}8.install-calibre-web${RES}"
 		echo -e "${GREEN_COLOR}9.install-gitbook${RES}"
 		echo -e "${GREEN_COLOR}10.install-zeretier-one${RES}"
 		echo -e "${GREEN_COLOR}11.install-git${RES}"
@@ -200,9 +195,9 @@ install() {
 		3) install-zsh-lazyvim ;;
 		4) install-alacritty ;;
 		5) install-ubuntu-setup ;;
-		6) install-chatgpt-next-web ;;
-		7) install-calibre-web ;;
-		8) install-docker ;;
+		6) install-docker ;;
+		7) install-chatgpt-next-web ;;
+		8) install-calibre-web ;;
 		9) install-gitbook ;;
 		10) install-zeretier-one ;;
 		11) install-git ;;
