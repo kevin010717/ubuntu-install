@@ -150,20 +150,37 @@ install-shellcrash() {
 }
 
 install-update() {
-	sudo passwd root
-	sudo passwd -u root
-	sudo -i
+        sudo mv /etc/apt/sources.list.d/ubuntu.sources /etc/apt/sources.list.d/ubuntu.sources.bak
+	echo "
+	Enabled: yes
+	Types: deb
+	URIs: http://mirrors.tuna.tsinghua.edu.cn/ubuntu/
+	Suites: noble noble-updates noble-security
+	Components: main restricted universe multiverse
+	Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+	Enabled: yes
+	Types: deb
+	URIs: http://mirrors.ustc.edu.cn/ubuntu/
+	Suites: noble noble-updates noble-security
+	Components: main restricted universe multiverse
+	Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+	Enabled: yes
+	Types: deb
+	URIs: http://mirrors.aliyun.com/ubuntu/
+	Suites: noble noble-updates noble-security
+	Components: main restricted universe multiverse
+	Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg" >> /etc/apt/sources.list.d/ubuntu.sources
 	sudo apt update
 	sudo apt install curl neovim git gh zsh net-tools tmux openssh-server build-essential npm fzf ytfzf ranger rtv cargo -y
 }
 
 install() {
 	while true; do
-		echo -e "${GREEN_COLOR}1.install-update${RES}"
-		echo -e "${GREEN_COLOR}2.install-shellcrash${RES}"
+		echo -e "${GREEN_COLOR}1.install-shellcrash${RES}"
+		echo -e "${GREEN_COLOR}2.install-update${RES}"
 		echo -e "${GREEN_COLOR}3.install-zsh-lazyvim${RES}"
-		echo -e "${GREEN_COLOR}5.install-ubuntu-setup${RES}"
 		echo -e "${GREEN_COLOR}4.install-alacritty${RES}"
+		echo -e "${GREEN_COLOR}5.install-ubuntu-setup${RES}"
 		echo -e "${GREEN_COLOR}6.install-chatgpt-next-web${RES}"
 		echo -e "${GREEN_COLOR}7.install-calibre-web${RES}"
 		echo -e "${GREEN_COLOR}8.install-docker${RES}"
@@ -171,11 +188,11 @@ install() {
 		echo -e "${GREEN_COLOR}10.install-zeretier-one${RES}"
 		read choice
 		case $choice in
-		1) install-update ;;
-		2) install-zsh-lazyvim ;;
-		3) install-alacritty ;;
-		4) install-ubuntu-setup ;;
-		5) install-shellcrash ;;
+		1) install-shellcrash ;;
+		2) install-update ;;
+		3) install-zsh-lazyvim ;;
+		4) install-alacritty ;;
+		5) install-ubuntu-setup ;;
 		6) install-chatgpt-next-web ;;
 		7) install-calibre-web ;;
 		8) install-docker ;;
