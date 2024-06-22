@@ -8,11 +8,11 @@ chmod +x "$0"
 #换键盘布局
 #
 #
-install-git(){
-git config --global user.email "k511153362@gmail.com"
-git config --global user.name "kevin010717"
-gh auth login
-gh repo clone kevin010717/ubuntu-install
+install-git() {
+	git config --global user.email "k511153362@gmail.com"
+	git config --global user.name "kevin010717"
+	gh auth login
+	gh repo clone kevin010717/ubuntu-install
 }
 install-lua-language-server() {
 	sudo apt-get install lua5.3 liblua5.3-dev
@@ -138,10 +138,11 @@ install-alacritty() {
 install-zsh-lazyvim() {
 	sh -c "$(curl -fsSL https://install.ohmyz.sh/)"
 	sudo usermod -s /usr/bin/zsh ${whoami}
+	mkdir .nerd-fonts && cd .nerd-fonts
 	wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/0xProto.zip
 	unzip *.zip
-	rm -rf *.zip
 	sudo cp 0xProtoNerdFont-Regular.ttf /usr/share/fonts
+	cd ../ && rm -rf .nerd-fonts
 	fc-cache -fv
 	#todo 字体切换
 	#git clone https://github.com/NvChad/starter ~/.config/nvim && nvim
@@ -155,26 +156,26 @@ install-shellcrash() {
 }
 
 install-update() {
-        sudo mv /etc/apt/sources.list.d/ubuntu.sources /etc/apt/sources.list.d/ubuntu.sources.bak
+	sudo mv /etc/apt/sources.list.d/ubuntu.sources /etc/apt/sources.list.d/ubuntu.sources.bak
 	echo "
-	Enabled: yes
-	Types: deb
-	URIs: http://mirrors.tuna.tsinghua.edu.cn/ubuntu/
-	Suites: noble noble-updates noble-security
-	Components: main restricted universe multiverse
-	Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-	Enabled: yes
-	Types: deb
-	URIs: http://mirrors.ustc.edu.cn/ubuntu/
-	Suites: noble noble-updates noble-security
-	Components: main restricted universe multiverse
-	Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-	Enabled: yes
-	Types: deb
-	URIs: http://mirrors.aliyun.com/ubuntu/
-	Suites: noble noble-updates noble-security
-	Components: main restricted universe multiverse
-	Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg" >> /etc/apt/sources.list.d/ubuntu.sources
+Enabled: yes
+Types: deb
+URIs: http://mirrors.tuna.tsinghua.edu.cn/ubuntu/
+Suites: noble noble-updates noble-security
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+Enabled: yes
+Types: deb
+URIs: http://mirrors.ustc.edu.cn/ubuntu/
+Suites: noble noble-updates noble-security
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+Enabled: yes
+Types: deb
+URIs: http://mirrors.aliyun.com/ubuntu/
+Suites: noble noble-updates noble-security
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg" >>/etc/apt/sources.list.d/ubuntu.sources
 	sudo apt update
 	sudo apt install curl neovim git gh zsh net-tools tmux openssh-server build-essential npm fzf ytfzf ranger rtv cargo -y
 }
