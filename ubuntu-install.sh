@@ -8,7 +8,12 @@ chmod +x "$0"
 #换键盘布局
 #
 #
-
+install-git(){
+git config --global user.email "k511153362@gmail.com"
+git config --global user.name "kevin010717"
+gh auth login
+gh repo clone kevin010717/ubuntu-install
+}
 install-lua-language-server() {
 	sudo apt-get install lua5.3 liblua5.3-dev
 	sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
@@ -186,6 +191,7 @@ install() {
 		echo -e "${GREEN_COLOR}8.install-docker${RES}"
 		echo -e "${GREEN_COLOR}9.install-gitbook${RES}"
 		echo -e "${GREEN_COLOR}10.install-zeretier-one${RES}"
+		echo -e "${GREEN_COLOR}11.install-git${RES}"
 		read choice
 		case $choice in
 		1) install-shellcrash ;;
@@ -198,6 +204,7 @@ install() {
 		8) install-docker ;;
 		9) install-gitbook ;;
 		10) install-zeretier-one ;;
+		11) install-git ;;
 		*) break ;;
 		esac
 	done
