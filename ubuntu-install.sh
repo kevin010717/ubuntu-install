@@ -6,8 +6,31 @@ chmod +x "$0"
 #todo
 #迁移到服务器
 #换键盘布局
+#leetcode
+#clouddrive2
+#samba
+#image.nvim
+#translate.nvim
+#termdebug.vim vimspector
+#tagbar kitty.config
 #
 #
+install-python() {
+	sudo apt install -y python3 python3-venv python3-pip
+	sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
+	sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.12 1
+
+	sudo mkdir -p /root/.nvm
+	sudo wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+	cat >>~/.zshrc <<EOF
+'export NVM_DIR="$HOME/.nvm" 
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion'
+EOF
+	nvm install 20
+	#mason 安装isort debugpy ruff-lsp pyright
+	#LazyVimextra 安装editor-outline
+}
 install-git() {
 	git config --global user.email "k511153362@gmail.com"
 	git config --global user.name "kevin010717"
@@ -133,15 +156,24 @@ install-alacritty() {
 install-zsh-lazyvim() {
 	sh -c "$(curl -fsSL https://install.ohmyz.sh/)"
 	sudo usermod -s /usr/bin/zsh ${whoami}
+
 	mkdir .nerd-fonts && cd .nerd-fonts
 	wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/0xProto.zip
 	unzip *.zip
 	sudo cp 0xProtoNerdFont-Regular.ttf /usr/share/fonts
 	cd ../ && rm -rf .nerd-fonts
 	fc-cache -fv
-	#todo 字体切换
-	#git clone https://github.com/NvChad/starter ~/.config/nvim && nvim
-	git clone https://github.com/LazyVim/starter ~/.config/nvim && nvim
+
+	mkdir -p ~/.config/kitty
+	cat <<EOF >>~/.config/kitty/kitty.conf
+font_family 0xProto Nerd Font
+font_size 24
+EOF
+
+	#nvchad git clone https://github.com/NvChad/starter ~/.config/nvim
+	git clone https://github.com/LazyVim/starter ~/.config/nvim
+	#lunarvim bash <(curl -s https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh)
+	#AstroNvim git clone --depth 1 https://github.com/AstroNvim/template ~/.config/nvim
 }
 
 install-shellcrash() {
@@ -172,7 +204,13 @@ Suites: noble noble-updates noble-security
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg" >>/etc/apt/sources.list.d/ubuntu.sources
 	sudo apt update
-	sudo apt install curl neovim git gh zsh net-tools tmux openssh-server build-essential npm fzf ytfzf ranger rtv cargo -y
+	sudo apt install curl neovim git gh zsh net-tools tmux openssh-server build-essential npm fzf ytfzf ranger rtv cargo tree neofetch htop kitty -y
+	sudo snap install slides glow
+
+	ranger --copy-config=all
+	export RANGER_LOAD_DEFAULT_RC=FALSE
+
+	echo "neofetch" >>~/.zshrc
 }
 
 install() {
