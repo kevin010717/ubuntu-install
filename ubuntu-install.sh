@@ -6,15 +6,49 @@ chmod +x "$0"
 #todo
 #迁移到服务器
 #换键盘布局
-#leetcode
-#clouddrive2
 #samba
-#image.nvim
-#translate.nvim
-#termdebug.vim vimspector
-#tagbar kitty.config
+#translate.nvim termdebug.vim vimspector vimwiki
 #
 #
+install-samba() {
+	cp /etc/samba/smb.conf /etc/samba/smb.conf.bak
+	cat >>/etc/samba/smb.conf <<EOF
+'[sambashare]
+comment = Samba on ubuntu
+path = /
+read only = no
+browsable = yes'
+EOF
+	sudo smbpasswd -a kevin
+	sudo ufw allow samba
+	sudo service smbd restart
+}
+install-filebrowser() {
+	curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
+	sudo nohup filebrowser -a 0.0.0.
+	0 -p 18650 -r / -d ~/.filebrowser/filebrowser.db --disable-typ
+	e-detection-by-header --disable-preview-resize --disable-exec -
+	-disable-thumbnails --cache-dir ~/.filebrowser/cache >/dev/nul
+	l 2>&1 &
+}
+install-cd2() {
+	sudo -i
+	mount --make-shared /
+	mkdir -p /CloudNAS /Config /media
+	docker pull cloudnas/clouddrive2:latest
+	docker run -d \
+		--name clouddrive \
+		--restart unless-stopped \
+		--env CLOUDDRIVE_HOME=/Config \
+		-v /CloudNAS:/CloudNAS:shared \
+		-v /Config:/Config \
+		-v /media:/media:shared \
+		--network host \
+		--pid host \
+		--privileged \
+		--device /dev/fuse:/dev/fuse \
+		cloudnas/clouddrive2:latest
+}
 install-python() {
 	sudo apt install -y python3 python3-venv python3-pip
 	sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
@@ -88,9 +122,17 @@ install-zeretier-one() {
 }
 
 install-gitbook() {
-	sudo npm install -g bun gitbook-cli
+	sudo npm install -g bun gitbook-cli n
+	sudo n 10.22.0
+	sudo n run 10.22.0 /usr/local/bin/gitbook --version
 }
-
+start-gitbook() {
+	sudo gitbook init
+	sudo gitbook epub
+	sudo gitbook pdf
+	sudo gitbook mobi
+	sudo gitbook build
+}
 install-docker() {
 	sudo apt-get install docker.io
 	sudo systemctl start docker
@@ -204,9 +246,10 @@ Suites: noble noble-updates noble-security
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg" >>/etc/apt/sources.list.d/ubuntu.sources
 	sudo apt update
-	sudo apt install curl neovim git gh zsh net-tools tmux openssh-server build-essential npm fzf ytfzf ranger rtv cargo tree neofetch htop kitty -y
+	sudo apt install curl neovim git gh zsh net-tools tmux openssh-server build-essential npm fzf ytfzf ranger rtv cargo tree neofetch htop kitty calibre pandoc fuse3 -y
 	sudo snap install slides glow
-
+	#web pages to epub
+	npm install -g percollate
 	ranger --copy-config=all
 	export RANGER_LOAD_DEFAULT_RC=FALSE
 
