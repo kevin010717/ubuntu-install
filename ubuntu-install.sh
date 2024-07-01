@@ -6,21 +6,31 @@ chmod +x "$0"
 #todo
 #迁移到服务器
 #换键盘布局
-#samba
-#translate.nvim termdebug.vim vimspector vimwiki
+#translate.nvim termdebug.vim vimspector vimwiki editor-outline
 #
 #
+install-linuxbrew() {
+	sudo apt update
+	sudo apt install build-essential curl file git
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	(
+		echo
+		echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
+	) >>/home/kevin/.zshrc
+	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+	source .zshrc
+	brew --version
+
+}
 install-samba() {
 	cp /etc/samba/smb.conf /etc/samba/smb.conf.bak
 	cat >>/etc/samba/smb.conf <<EOF
-'[sambashare]
+[sambashare]
 comment = Samba on ubuntu
 path = /
 read only = no
-browsable = yes'
+browsable = yes
 EOF
-	sudo smbpasswd -a kevin
-	sudo ufw allow samba
 	sudo service smbd restart
 }
 install-filebrowser() {
@@ -49,67 +59,11 @@ install-cd2() {
 		--device /dev/fuse:/dev/fuse \
 		cloudnas/clouddrive2:latest
 }
-install-python() {
-	sudo apt install -y python3 python3-venv python3-pip
-	sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
-	sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.12 1
-
-	sudo mkdir -p /root/.nvm
-	sudo wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-	cat >>~/.zshrc <<EOF
-'export NVM_DIR="$HOME/.nvm" 
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion'
-EOF
-	nvm install 20
-	#mason 安装isort debugpy ruff-lsp pyright
-	#LazyVimextra 安装editor-outline
-}
 install-git() {
 	git config --global user.email "k511153362@gmail.com"
 	git config --global user.name "kevin010717"
 	gh auth login
 	gh repo clone kevin010717/ubuntu-install
-}
-install-lua-language-server() {
-	sudo apt-get install lua5.3 liblua5.3-dev
-	sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
-	(
-		echo
-		echo 'eval "$(/home/linuxbrew/.linuxbre  w/bin/brew shellenv)"'
-	) >>/home/kevin/.zshrc
-	eval "$(/home/linuxbrew/.linuxbrew/bin/brew she llenv)"
-	brew install lua-language-server
-}
-
-install-aider() {
-	git clone https://github.com/paul-gauthier/aider.git .aider
-	cd .aider
-	python3 -m venv venv
-	pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-	./venv/bin/python3 -m pip install aider-chat
-	export OPENAI_API_KEY=sk-wlm6Xs71oEJ379JE1027B83bEeFa4dF493Dc82Cb4e7dB170
-	export OPENAI_API_BASE="https://apikeyplus.com"
-	source venv/bin/activate
-	aider
-}
-
-install-chatGPT-shell-cli() {
-	curl -sS https://raw.githubusercontent.com/0xacx/chatGPT-shell-cli/main/install.sh | sudo -E zsh
-	export OPENAI_KEY=sk-pfQvDlLpDDVSlj1I618e034d18Fc4bBd866392F612F3Bb8f
-	chatgpt
-}
-
-install-ebr() {
-	git clone https://github.com/wustho/epr.git .erp
-	cd .epr
-	python3 -m venv venv
-	./venv/bin/python3 -m pip install epr-reader
-	#./venv/bin/python3 epr.py  file.epub
-}
-
-install-bk() {
-	cargo install bk
 }
 
 install-zeretier-one() {
@@ -175,6 +129,7 @@ install-chatgpt-next-web() {
 		-e BASE_URL=https://oneapi.xty.app \
 		--restart always \
 		yidadaa/chatgpt-next-web
+	#sk-wlm6Xs71oEJ379JE1027B83bEeFa4dF493Dc82Cb4e7dB170 https://apikeyplus.com
 }
 
 install-ubuntu-setup() {
@@ -223,11 +178,9 @@ install-shellcrash() {
 	echo "https://sub.chasing.sbs:21600/api/v1/client/subscribe?token=52510b4697e5d0a7c108af210cd2834a"
 	echo "https://abc.xhonor.top:9066/v2b/qz/api/v1/client/subscribe?token=a1cbd3ce604abc59ef349b53bb596654"
 }
-
 install-update() {
-	sudo mv /etc/apt/sources.list.d/ubuntu.sources /etc/apt/sources.list.d/ubuntu.sources.bak
-	sudo echo "
-Enabled: yes
+	sudo cp /etc/apt/sources.list.d/ubuntu.sources /etc/apt/sources.list.d/ubuntu.sources.bak
+	echo "Enabled: yes
 Types: deb
 URIs: http://mirrors.tuna.tsinghua.edu.cn/ubuntu/
 Suites: noble noble-updates noble-security
@@ -244,10 +197,25 @@ Types: deb
 URIs: http://mirrors.aliyun.com/ubuntu/
 Suites: noble noble-updates noble-security
 Components: main restricted universe multiverse
-Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg" >>/etc/apt/sources.list.d/ubuntu.sources
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+Enabled: yes
+Types: deb
+URIs: http://mirrors.163.com/ubuntu/
+Suites: noble noble-updates noble-security
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+Enabled: yes
+Types: deb
+URIs: http://mirrors.tencent.com/ubuntu/
+Suites: noble noble-updates noble-security
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg" | sudo tee /etc/apt/sources.list.d/ubuntu.sources
 	sudo apt update
-	sudo apt install curl neovim git gh zsh net-tools tmux openssh-server build-essential npm fzf ytfzf ranger rtv cargo tree neofetch htop kitty calibre pandoc fuse3 -y
+	sudo apt install lazygit curl neovim git gh zsh net-tools tmux openssh-server build-essential npm fzf ytfzf ranger rtv cargo tree neofetch htop kitty calibre pandoc fuse3 python3 python3-venv python3-pip pipx -y
 	sudo snap install slides glow
+	pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+	pipx install tomato-clock
+	pipx run --spec tomato-clock tomato
 	#web pages to epub
 	npm install -g percollate
 	ranger --copy-config=all
