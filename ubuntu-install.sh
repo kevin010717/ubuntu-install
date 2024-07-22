@@ -18,7 +18,7 @@ install-linuxbrew() {
 		echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
 	) >>/home/kevin/.zshrc
 	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-	source .zshrc
+	source "/home/kevin/.zshrc"
 	brew --version
 
 }
@@ -35,11 +35,7 @@ EOF
 }
 install-filebrowser() {
 	curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
-	sudo nohup filebrowser -a 0.0.0.
-	0 -p 18650 -r / -d ~/.filebrowser/filebrowser.db --disable-typ
-	e-detection-by-header --disable-preview-resize --disable-exec -
-	-disable-thumbnails --cache-dir ~/.filebrowser/cache >/dev/nul
-	l 2>&1 &
+	sudo nohup filebrowser -a 0.0.0.0 -p 18650 -r / -d ~/.filebrowser/filebrowser.db --disable-type-detection-by-header --disable-preview-resize --disable-exec --disable-thumbnails --cache-dir ~/.filebrowser/cache >/dev/null 2>&1 &
 }
 install-cd2() {
 	sudo -i
@@ -91,11 +87,11 @@ install-docker() {
 	sudo apt-get install docker.io
 	sudo systemctl start docker
 	sudo systemctl enable docker
-	sudo echo '{
-"registry-mirrors": [
-"https://2h3poj2z.mirror.aliyuncs.com"
-]
-}' >/etc/docker/daemon.jason
+	echo '{
+  "registry-mirrors": [
+  "https://2h3poj2z.mirror.aliyuncs.com"
+  ]
+}' | sudo tee /etc/docker/daemon.json >/dev/null
 	sudo docker run hello-world
 	sudo curl -L "https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 	sudo chmod +x /usr/local/bin/docker-compose
@@ -103,10 +99,10 @@ install-docker() {
 }
 
 install-calibre-web() {
-	mkdir $HOME/calibre-web
-	mkdir $HOME/calibre-web/books/
-	mkdir $HOME/calibre-web/config/
-	sudo chmod 777 -R $HOME/calibre-web/
+	mkdir "$HOME/calibre-web"
+	mkdir "$HOME/calibre-web/books/"
+	mkdir "$HOME/calibre-web/config/"
+	sudo chmod 777 -R "$HOME/calibre-web/"
 	sudo docker run -d \
 		--name=calibre-web \
 		-e PUID=1000 \
@@ -115,8 +111,8 @@ install-calibre-web() {
 		-e DOCKER_MODS=linuxserver/mods:universal-calibre `#optional` \
 		-e OAUTHLIB_RELAX_TOKEN_SCOPE=1 `#optional` \
 		-p 8083:8083 \
-		-v $HOME/calibre-web/config:/config \
-		-v $HOME/calibre-web/books:/books \
+		-v "$HOME/calibre-web/config:/config" \
+		-v "$HOME/calibre-web/books:/books" \
 		--restart unless-stopped \
 		linuxserver/calibre-web:latest
 }
@@ -152,11 +148,11 @@ install-alacritty() {
 
 install-zsh-lazyvim() {
 	sh -c "$(curl -fsSL https://install.ohmyz.sh/)"
-	sudo usermod -s /usr/bin/zsh ${whoami}
+	sudo usermod -s /usr/bin/zsh $'whoami'
 
-	mkdir .nerd-fonts && cd .nerd-fonts
+	mkdir .nerd-fonts && cd .nerd-fonts || return
 	wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/0xProto.zip
-	unzip *.zip
+	unzip 0xProto.zip
 	sudo cp 0xProtoNerdFont-Regular.ttf /usr/share/fonts
 	cd ../ && rm -rf .nerd-fonts
 	fc-cache -fv
@@ -237,7 +233,7 @@ install() {
 		echo -e "${GREEN_COLOR}9.install-gitbook${RES}"
 		echo -e "${GREEN_COLOR}10.install-zeretier-one${RES}"
 		echo -e "${GREEN_COLOR}11.install-git${RES}"
-		read choice
+		read -r choice
 		case $choice in
 		1) install-shellcrash ;;
 		2) install-update ;;
@@ -258,7 +254,7 @@ install() {
 start() {
 	while true; do
 		echo -e "${GREEN_COLOR}1.clouddrive2${RES}"
-		read choice
+		read -r choice
 		case $choice in
 		1) ;;
 		*) break ;;
@@ -269,7 +265,7 @@ start() {
 fun() {
 	while true; do
 		echo -e "${GREEN_COLOR}1.cmatrix${RES}"
-		read choice
+		read -r choice
 		case $choice in
 		1) ;;
 		*) break ;;
@@ -289,7 +285,7 @@ while true; do
 	echo -e "${GREEN_COLOR}1.install${RES}"
 	echo -e "${GREEN_COLOR}2.start${RES}"
 	echo -e "${GREEN_COLOR}3.get some fun${RES}"
-	read choice
+	read -r choice
 	case $choice in
 	1) install ;;
 	2) start ;;
