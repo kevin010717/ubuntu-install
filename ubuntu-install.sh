@@ -207,8 +207,8 @@ Suites: noble noble-updates noble-security
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg" | sudo tee /etc/apt/sources.list.d/ubuntu.sources
 	sudo apt update
-	sudo apt install lazygit curl neovim git gh zsh net-tools tmux openssh-server build-essential npm fzf ytfzf ranger rtv cargo tree neofetch htop kitty calibre pandoc fuse3 python3 python3-venv python3-pip pipx -y
-	sudo snap install slides glow
+	sudo apt install curl neovim git gh zsh net-tools tmux openssh-server build-essential npm fzf ytfzf ranger rtv cargo tree neofetch htop kitty calibre pandoc fuse3 python3 python3-venv python3-pip pipx -y
+	sudo snap install slides glow lazygit
 	pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 	pipx install tomato-clock
 	pipx run --spec tomato-clock tomato
